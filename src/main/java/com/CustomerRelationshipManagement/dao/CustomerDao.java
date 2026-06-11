@@ -2,204 +2,135 @@ package com.CustomerRelationshipManagement.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.CustomerRelationshipManagement.entity.Customer;
 
 @Repository
 public class CustomerDao {
-	
-	SessionFactory sf;
 
-	public CustomerDao(SessionFactory sf) {
-		this.sf = sf;
-	}
-	
-	public String insertCustomer(Customer customer) {
-		
-		Session session =sf.openSession();
-		// insert , update , delete  -> u need of transaction
-		Transaction tr =session.beginTransaction();
-		session.persist(customer); //its saved data in db
-	    tr.commit();   //now u have to close the transaction 
-	    session.close();
-	    
-	    return "Customer insert Successfully";
-	}
-	
-	public List<Customer> getCustomersList() {
-		Session session = sf.openSession();
-	
-		return session.createQuery("from Customer", Customer.class).list();
-           
-	}
-	
-	public Customer getCustomerById(int id) {
-		Session session =sf.openSession();
-		Customer customer = session.get(Customer.class, id);
-		return customer;
-		
-		
-	}
-	
-	public String updateCustomer(Customer customer) {
-		Session session =sf.openSession();
-		Transaction tr =session.beginTransaction();
-		session.merge(customer);
-		tr.commit();
-		session.close();
+    private HibernateTemplate hibernateTemplate;
 
+    public CustomerDao(HibernateTemplate hibernateTemplate) {
+        this.hibernateTemplate = hibernateTemplate;
+    }
 
-		return "Customer updated Successfully";
-		
-	}
-	
-	public String deleteCustomerById(int id) {
-		Session session =sf.openSession();
-		Transaction tr =session.beginTransaction();
-		 Customer customer = session.get(Customer.class, id);
+    // INSERT
+    public String insertCustomer(Customer customer) {
+        hibernateTemplate.save(customer);
+        return "Customer inserted successfully";
+    }
 
-	        if (customer != null) {
-	            session.remove(customer);   // Hibernate 6 recommended
-	            tr.commit();
-	            session.close();
-	            return "Customer deleted Successfully";
-	        } else {
-	            return "Customer not found";
-	        }
-	        
-	
-	}
-	
-	public String insertMultipleCustomers(List<Customer> customers) {
-		Session session =sf.openSession();
-		Transaction tr =session.beginTransaction();
-		for(Customer customer:customers) {
-		session.persist(customer); 
-		}
-	    tr.commit();  
-	    session.close();
-	    
-	    return "Customers inserted Successfully";
-	}
-	
-	public List<Customer> getCustomerByFirstName(String firstName){
-		Session session =sf.openSession();    
-		Query<Customer> customers = session.createQuery("from Customer c  where c.firstName = :firstName",Customer.class) ;
-		customers.setParameter("firstName", firstName);
-		List<Customer> list = customers.list();
-		session.close();
-		return list;
-		
-	}
-	
-	public List<Customer> getCustomerByLastName(String lastName){
-		Session session =sf.openSession();
-		Query<Customer> customers = session.createQuery("from Customer c  where c.lastName = :lastName",Customer.class) ;
-		customers.setParameter("lastName", lastName);
-		List<Customer> list = customers.list();
-		session.close();
-		return list;
-		
-	}
-	
-	public List<Customer> getCustomerByLessThanAge(int age){
-		Session session =sf.openSession();
-		Query<Customer> customers = session.createQuery("from Customer c  where c.age<:age ",Customer.class);
-		customers.setParameter("age", age);
-		List<Customer> list = customers.list();
-		session.close();
-		return list;
+    // GET ALL
+    public List<Customer> getCustomersList() {
+        return hibernateTemplate.loadAll(Customer.class);
+    }
 
-		
-		
-	}
-	
-	public List<Customer> getCustomerByAge(int age){
-		Session session =sf.openSession();
-		Query<Customer> customers = session.createQuery("from Customer c  where c.age = :age ",Customer.class);
-		customers.setParameter("age", age);
-		List<Customer> list = customers.list();
-		session.close();
-		return list;
-	}
-	
-	public String updateFirstName(int id,String firstName) {
-		Session session =sf.openSession();
-		Transaction tr = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		customer.setFirstName(firstName);
-		tr.commit();
-		session.close();
-		return "updated susscessfully";
-	}
-	
-	public String updateLatName(int id , String lastName) {
-		Session  session =sf.openSession();
-		Transaction tr = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		customer.setLastName(lastName);
-		tr.commit();
-		session.close();
-		return "updated lastName susscessfully";
-	}
-	
-	
-	public String updateEmailId(int id , String emailId) {
-		Session  session =sf.openSession();
-		Transaction tr = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		customer.setEmail(emailId);
-		tr.commit();
-		session.close();
-		return "updated emailId susscessfully";
-		
-		
-	}
-	
-	
-	public String updateMobileNumber(int id , String mobileNumber) {
-		Session  session =sf.openSession();
-		Transaction tr = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		customer.setMobileNumber(mobileNumber);
-		tr.commit();
-		session.close();
-		return "updated mobileNumber susscessfully";
-		
-		
-	}
-	
-	public String updateAge(int id , int age ) {
-		Session  session =sf.openSession();
-		Transaction tr = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		customer.setAge(age);
-		tr.commit();
-		session.close();
-		return "updated age susscessfully";
-	}
-	
-	
-	public List<String> getCustomersFirstName(){
-		Session  session =sf.openSession();
-		return session.createQuery("select c.firstName from Customer c").list();
+    // GET BY ID
+    public Customer getCustomerById(int id) {
+        return hibernateTemplate.get(Customer.class, id);
+    }
 
-	}
-	
-	
-	
-	
-	
-	}
-	
-	
-	
-	
-	
-	
+    // UPDATE
+    public String updateCustomer(Customer customer) {
+        hibernateTemplate.update(customer);
+        return "Customer updated successfully";
+    }
 
+    // DELETE
+    public String deleteCustomerById(int id) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            hibernateTemplate.delete(customer);
+            return "Customer deleted successfully";
+        }
+        return "Customer not found";
+    }
+
+    // BULK INSERT
+    public String insertMultipleCustomers(List<Customer> customers) {
+        for (Customer c : customers) {
+            hibernateTemplate.save(c);
+        }
+        return "Customers inserted successfully";
+    }
+
+    // QUERIES
+    public List<Customer> getCustomersByFirstName(String firstName) {
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.firstName = ?", firstName);
+    }
+
+    public List<Customer> getCustomersByLastName(String lastName) {
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.lastName = ?", lastName);
+    }
+
+    public List<Customer> getCustomersByLessThanAge(int age) {
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.age < ?", age);
+    }
+
+    public List<Customer> getCustomersByAge(int age) {
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.age = ?", age);
+    }
+
+    // UPDATE FIELDS
+    public String updateFirstName(int id, String firstName) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setFirstName(firstName);
+            hibernateTemplate.update(customer);
+            return "FirstName updated";
+        }
+        return "Customer not found";
+    }
+
+    public String updateLastName(int id, String lastName) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setLastName(lastName);
+            hibernateTemplate.update(customer);
+            return "LastName updated";
+        }
+        return "Customer not found";
+    }
+
+    public String updateEmailId(int id, String email) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setEmail(email);
+            hibernateTemplate.update(customer);
+            return "Email updated";
+        }
+        return "Customer not found";
+    }
+
+    public String updateMobileNumber(int id, String mobile) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setMobileNumber(mobile);
+            hibernateTemplate.update(customer);
+            return "Mobile updated";
+        }
+        return "Customer not found";
+    }
+
+    public String updateAge(int id, int age) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setAge(age);
+            hibernateTemplate.update(customer);
+            return "Age updated";
+        }
+        return "Customer not found";
+    }
+
+    // SELECT ONLY FIRST NAME
+    public List<String> getCustomersFirstName() {
+        return (List<String>) hibernateTemplate.find(
+                "select c.firstName from Customer c");
+    }
+}
