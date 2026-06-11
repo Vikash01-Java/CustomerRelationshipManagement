@@ -6,35 +6,43 @@ import com.CustomerRelationshipManagement.entity.Customer;
 
 public interface CustomerService {
 	
+//	insert
 	public String insertCustomer(Customer customer);
 	
-	public  List<Customer> getCustomersList();
+	public String insertMultiplyCustomer(List<Customer> customers);
 	
-	public Customer getCustomerById(int id);
-	
+//	update
 	public String customerUpdate(Customer customer);
 	
-	public String customerDeleteById(int id);
+    public String updateFirstName(Integer id, String firstName);
 	
-	public String insertMultiplyCustomer(List<Customer> customers);
+	public String updateLastName(Integer id, String lastName);
+
+	public String updateEmailId(Integer id, String emailId);
+	
+	public String updateMobileNumber(Integer id, String mobileNumber);
+	
+	public String updateAge(Integer id, Integer age);
+	
+	
+//  delete	
+	public String customerDeleteById(Integer id);
+	
+	
+//  get	
+	public  List<Customer> getCustomersList();
+	
+	public Customer getCustomerById(Integer id);
 	
 	public List<Customer> getCustomerByFirstName(String firstName);
 	
 	public List<Customer> getCustomerByLastName(String lastName);
 
-	public List<Customer> getCustomerByLessThanAge(int age);
+	public List<Customer> getCustomerByLessThanAge(Integer age);
 	
-	public List<Customer> getCustomerAge(int age);
+	public List<Customer> getCustomerAge(Integer age);
 	
-	public String updateFirstName(int id, String firstName);
 	
-	public String updateLastName(int id, String lastName);
-
-	public String updateEmailId(int id, String emailId);
-	
-	public String updateMobileNumber(int id, String emailId);
-	
-	public String updateAge(int id, int age);
 	
 	public List<String> getCustomerFirstName();
 	

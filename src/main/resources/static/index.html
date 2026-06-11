@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRM Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-animation"></div>
+
+<h1 class="title">🚀 Customer Relationship Management</h1>
+
+<div class="container">
+
+    <!-- FORM -->
+    <div class="card">
+        <h2>Add Customer</h2>
+
+        <input type="text" id="firstName" placeholder="First Name">
+        <input type="text" id="lastName" placeholder="Last Name">
+        <input type="text" id="email" placeholder="Email">
+        <input type="text" id="mobileNumber" placeholder="Mobile">
+        <input type="number" id="age" placeholder="Age">
+
+        <button onclick="addCustomer()">➕ Add Customer</button>
+    </div>
+
+    <!-- GET ALL -->
+    <div class="card">
+        <h2>All Customers</h2>
+        <button onclick="getCustomers()">📋 Load Customers</button>
+        <div id="output"></div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

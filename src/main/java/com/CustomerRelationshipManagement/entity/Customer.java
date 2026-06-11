@@ -15,7 +15,7 @@ public class Customer {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column(name = "first_name")
 	private String firstName;
@@ -29,13 +29,13 @@ public class Customer {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 	
-	private int age;
+	private Integer age;
 	
 	public Customer() {
 		super();
 	}
 
-	public Customer(int id, String firstName, String lastName, String email, String mobileNumber, int age) {
+	public Customer(Integer id, String firstName, String lastName, String email, String mobileNumber, Integer age) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -48,7 +48,7 @@ public class Customer {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -101,3 +101,11 @@ public class Customer {
 	
 
 }
+
+//{
+//    "firstName": "vikas",
+//    "lastName": "kashyap",
+//    "email": "vi@123",
+//    "mobileNumber": "89989809",
+//    "age": 23
+//}

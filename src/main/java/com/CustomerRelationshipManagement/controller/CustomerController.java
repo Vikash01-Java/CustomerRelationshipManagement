@@ -30,103 +30,91 @@ public CustomerController(CustomerService costomerService) {
 		this.costomerService = costomerService;
 }
 
-
+//insert
 @PostMapping("/insert")  //ok
 	public String insertCustomer(@RequestBody Customer customer) {
 		String msg =costomerService.insertCustomer(customer);     
 		return msg;
 		
 	}
+@PostMapping    //ok
+public String insertMultiplyCustomer(@RequestBody List<Customer> customers) {
+	return costomerService.insertMultiplyCustomer(customers);
 	
+}
+//update
+@PutMapping    // ok
+public String customerUpdate(@RequestBody Customer customer) {
+	return costomerService.customerUpdate(customer);
+}
+@PutMapping("/fname/{id}")   //ok
+public String updateFirstName(@PathVariable Integer id,@RequestBody Map<String, String> request ) {
+	   String firstName = request.get("firstName");
+	   return costomerService.updateFirstName(id, firstName);
+	   	   
+}
+@PutMapping("/lname/{id}")   //ok
+public String updateLastName(@PathVariable Integer id,@RequestBody Map<String, String> request ) {
+	   String lastName = request.get("lastName");
+	   return costomerService.updateLastName(id, lastName);
+	   	   
+}
+@PutMapping("/email/{id}")  //ok
+public String updateEmailId(@PathVariable Integer id , @RequestBody Map<String, String> request) {
+	String emailId = request.get("emailId");
+	return costomerService.updateEmailId(id, emailId);
+}
+@PutMapping("/mobile/{id}")  //ok
+public String updateMobileNumber(@PathVariable Integer id , @RequestBody Map<String , String> request) {
+	String mobileNumber = request.get("mobileNumber");
+	return costomerService.updateMobileNumber(id, mobileNumber);
+	
+}
+@PutMapping("/age/{id}")  //ok
+public String updateAge(@PathVariable Integer id , @RequestBody Map<String , Integer> request) {
+    Integer age = request.get("age");
+    return costomerService.updateAge(id , age);
+}
+//delete
+@DeleteMapping("/{id}")  //ok
+public String customerDeleteById(@PathVariable Integer id) {
+	return costomerService.customerDeleteById(id);
+	
+}
+//get
 @GetMapping   //ok
 public List<Customer> getCustomersList(){
 	List<Customer> list = costomerService.getCustomersList();
 	return list;
 	
 }
-
 @GetMapping("/{id}")  //ok
-public Customer getCustomerById(@PathVariable int id){
+public Customer getCustomerById(@PathVariable Integer id){
 	Customer customer = costomerService.getCustomerById(id);
 	return customer;
 	
 }
-@PutMapping    // ok
-public String customerUpdate(@RequestBody Customer customer) {
-	return costomerService.customerUpdate(customer);
-}
-
-@DeleteMapping("/{id}")  //ok
-public String customerDeleteById(@PathVariable int id) {
-	return costomerService.customerDeleteById(id);
-	
-}
-
-@PostMapping    //ok
-public String insertMultiplyCustomer(@RequestBody List<Customer> customers) {
-	return costomerService.insertMultiplyCustomer(customers);
-	
-}
-
 @GetMapping("/byfirstname/{firstName}")  //ok
 public List<Customer> getCustomerByFirstName(@PathVariable String firstName){
 	return costomerService.getCustomerByFirstName(firstName);
 	
 }
-
 @GetMapping("/bylastname/{lastName}")  //ok
 public List<Customer> getCustomerByLastName(@PathVariable String lastName){
 	return costomerService.getCustomerByLastName(lastName);
 	
 }
-	
 @GetMapping("/bylessthanage/{age}")   //ok
-public List<Customer> getCustomerByLessThanAge(@PathVariable  int age){
+public List<Customer> getCustomerByLessThanAge(@PathVariable  Integer age){
 	return costomerService.getCustomerByLessThanAge(age);
 	
 }
 
 @GetMapping("/byage/{age}")   //ok
-public List<Customer> getCustomerByAge(@PathVariable int age){
+public List<Customer> getCustomerByAge(@PathVariable Integer age){
 	return costomerService.getCustomerAge(age);
 	
 }
-@PutMapping("/fname/{id}")   //ok
-public String updateFirstName(@PathVariable int id,@RequestBody Map<String, String> request ) {
-	   String firstName = request.get("firstName");
-	   return costomerService.updateFirstName(id, firstName);
-	   
-	   
-}
-
-@PutMapping("/lname/{id}")   //ok
-public String updateLastName(@PathVariable int id,@RequestBody Map<String, String> request ) {
-	   String lastName = request.get("lastName");
-	   return costomerService.updateLastName(id, lastName);
-	   
-	   
-}
-
-@PutMapping("/email/{id}")  //ok
-public String updateEmailId(@PathVariable int id , @RequestBody Map<String, String> request) {
-	String emailId = request.get("emailId");
-	return costomerService.updateEmailId(id, emailId);
-}
-
-@PutMapping("/mobile/{id}")  //ok
-public String updateMobileNumber(@PathVariable int id , @RequestBody Map<String , String> request) {
-	String mobileNumber = request.get("mobileNumber");
-	return costomerService.updateMobileNumber(id, mobileNumber);
-	
-}
-
-
-@PutMapping("/age/{id}")  //ok
-public String updateAge(@PathVariable int id , @RequestBody Map<String , Integer> request) {
-    Integer age = request.get("age");
-    return costomerService.updateAge(id , age);
-}
-
 @GetMapping("/firstNames")
 public List<String> getCustomerFirstName(){
 	return costomerService.getCustomerFirstName();
