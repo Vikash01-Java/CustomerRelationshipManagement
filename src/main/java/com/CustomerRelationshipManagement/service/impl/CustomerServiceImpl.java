@@ -107,13 +107,13 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerDao.getCustomersByAge(age);
 	}
 
-
-<<<<<<< Updated upstream
-=======
+//
+//<<<<<<< Updated upstream
+//=======
     public String updateLastName(int id, String lastName) {
         return customerDao.updateLatName(id, lastName);
     }
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
 	@Override
 	public List<String> getCustomerFirstName() {
