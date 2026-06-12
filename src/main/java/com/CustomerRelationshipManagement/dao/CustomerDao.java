@@ -1,152 +1,136 @@
 package com.CustomerRelationshipManagement.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.CustomerRelationshipManagement.entity. Customer;
+import com.CustomerRelationshipManagement.entity.Customer;
 
 @Repository
 public class CustomerDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private HibernateTemplate hibernateTemplate;
 
-    public CustomerDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    // RowMapper
-    class CustomerRowMapper implements RowMapper<Customer> {
-        @Override
-        public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Customer c = new Customer();
-            c.setId(rs.getInt("id"));
-            c.setFirstName(rs.getString("first_name"));
-            c.setLastName(rs.getString("last_name"));
-            c.setEmail(rs.getString("email"));
-            c.setMobileNumber(rs.getString("mobile_number"));
-            c.setAge(rs.getInt("age"));
-            return c;
-        }
+    public CustomerDao(HibernateTemplate hibernateTemplate) {
+        this.hibernateTemplate = hibernateTemplate;
     }
 
     // INSERT
     public String insertCustomer(Customer customer) {
-        String sql = "INSERT INTO customer (first_name, last_name, email, mobile_number, age) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail(),
-                customer.getMobileNumber(),
-                customer.getAge());
+        hibernateTemplate.save(customer);
         return "Customer inserted successfully";
     }
 
     // GET ALL
     public List<Customer> getCustomersList() {
-        String sql = "SELECT * FROM customer";
-        return jdbcTemplate.query(sql, new CustomerRowMapper());
+        return hibernateTemplate.loadAll(Customer.class);
     }
 
     // GET BY ID
     public Customer getCustomerById(int id) {
-        String sql = "SELECT * FROM customer WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new CustomerRowMapper(), id);
+        return hibernateTemplate.get(Customer.class, id);
     }
 
     // UPDATE
     public String updateCustomer(Customer customer) {
-        String sql = "UPDATE customer SET first_name=?, last_name=?, email=?, mobile_number=?, age=? WHERE id=?";
-        jdbcTemplate.update(sql,
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail(),
-                customer.getMobileNumber(),
-                customer.getAge(),
-                customer.getId());
+        hibernateTemplate.update(customer);
         return "Customer updated successfully";
     }
 
     // DELETE
     public String deleteCustomerById(int id) {
-        String sql = "DELETE FROM customer WHERE id=?";
-        jdbcTemplate.update(sql, id);
-        return "Customer deleted successfully";
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            hibernateTemplate.delete(customer);
+            return "Customer deleted successfully";
+        }
+        return "Customer not found";
     }
 
     // BULK INSERT
     public String insertMultipleCustomers(List<Customer> customers) {
-        String sql = "INSERT INTO customer (first_name, last_name, email, mobile_number, age) VALUES (?, ?, ?, ?, ?)";
         for (Customer c : customers) {
-            jdbcTemplate.update(sql,
-                    c.getFirstName(),
-                    c.getLastName(),
-                    c.getEmail(),
-                    c.getMobileNumber(),
-                    c.getAge());
+            hibernateTemplate.save(c);
         }
         return "Customers inserted successfully";
     }
 
-    // SEARCH
+    // QUERIES
     public List<Customer> getCustomersByFirstName(String firstName) {
-        String sql = "SELECT * FROM customer WHERE first_name = ?";
-        return jdbcTemplate.query(sql, new CustomerRowMapper(), firstName);
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.firstName = ?", firstName);
     }
 
     public List<Customer> getCustomersByLastName(String lastName) {
-        String sql = "SELECT * FROM customer WHERE last_name = ?";
-        return jdbcTemplate.query(sql, new CustomerRowMapper(), lastName);
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.lastName = ?", lastName);
     }
 
     public List<Customer> getCustomersByLessThanAge(int age) {
-        String sql = "SELECT * FROM customer WHERE age < ?";
-        return jdbcTemplate.query(sql, new CustomerRowMapper(), age);
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.age < ?", age);
     }
 
     public List<Customer> getCustomersByAge(int age) {
-        String sql = "SELECT * FROM customer WHERE age = ?";
-        return jdbcTemplate.query(sql, new CustomerRowMapper(), age);
+        return (List<Customer>) hibernateTemplate.find(
+                "from Customer c where c.age = ?", age);
     }
 
     // UPDATE FIELDS
     public String updateFirstName(int id, String firstName) {
-        String sql = "UPDATE customer SET first_name=? WHERE id=?";
-        jdbcTemplate.update(sql, firstName, id);
-        return "FirstName updated";
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setFirstName(firstName);
+            hibernateTemplate.update(customer);
+            return "FirstName updated";
+        }
+        return "Customer not found";
     }
 
     public String updateLastName(int id, String lastName) {
-        String sql = "UPDATE customer SET last_name=? WHERE id=?";
-        jdbcTemplate.update(sql, lastName, id);
-        return "LastName updated";
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setLastName(lastName);
+            hibernateTemplate.update(customer);
+            return "LastName updated";
+        }
+        return "Customer not found";
     }
 
-    public String updateEmailId(int id, String emailId) {
-        String sql = "UPDATE customer SET email=? WHERE id=?";
-        jdbcTemplate.update(sql, emailId, id);
-        return "Email updated";
+    public String updateEmailId(int id, String email) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setEmail(email);
+            hibernateTemplate.update(customer);
+            return "Email updated";
+        }
+        return "Customer not found";
     }
 
-    public String updateMobileNumber(int id, String mobileNumber) {
-        String sql = "UPDATE customer SET mobile_number=? WHERE id=?";
-        jdbcTemplate.update(sql, mobileNumber, id);
-        return "Mobile updated";
+    public String updateMobileNumber(int id, String mobile) {
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setMobileNumber(mobile);
+            hibernateTemplate.update(customer);
+            return "Mobile updated";
+        }
+        return "Customer not found";
     }
 
     public String updateAge(int id, int age) {
-        String sql = "UPDATE customer SET age=? WHERE id=?";
-        jdbcTemplate.update(sql, age, id);
-        return "Age updated";
+        Customer customer = hibernateTemplate.get(Customer.class, id);
+        if (customer != null) {
+            customer.setAge(age);
+            hibernateTemplate.update(customer);
+            return "Age updated";
+        }
+        return "Customer not found";
     }
 
-    // GET ONLY FIRST NAMES
+    // SELECT ONLY FIRST NAME
     public List<String> getCustomersFirstName() {
-        String sql = "SELECT first_name FROM customer";
-        return jdbcTemplate.queryForList(sql, String.class);
+        return (List<String>) hibernateTemplate.find(
+                "select c.firstName from Customer c");
     }
 }

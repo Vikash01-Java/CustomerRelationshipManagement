@@ -1,6 +1,7 @@
 package com.CustomerRelationshipManagement.service;
 
 import java.util.List;
+
 import com.CustomerRelationshipManagement.entity.Customer;
 
 public interface CustomerService {
@@ -15,15 +16,15 @@ public interface CustomerService {
 
     String customerDeleteById(int id);
 
-    String insertMultipleCustomer(List<Customer> customers);
+    String insertMultiplyCustomer(List<Customer> customers);
 
     List<Customer> getCustomerByFirstName(String firstName);
 
     List<Customer> getCustomerByLastName(String lastName);
 
-    List<Customer> getCustomerByAge(int age);
+    List<Customer> getCustomerByLessThanAge(int age);
 
-    List<Customer> getCustomerByAgeLessThan(int age);
+    List<Customer> getCustomerAge(int age);
 
     String updateFirstName(int id, String firstName);
 
